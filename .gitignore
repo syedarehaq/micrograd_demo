@@ -16,3 +16,4 @@ slurm-*
 .RData
 
 venv
+datasets
