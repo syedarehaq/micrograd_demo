@@ -161,6 +161,23 @@ for epoch in range(1000):
     # backward pass
     W.grad = None # set to zero gradient
     loss.backward()
-    W.data += -1 * W.grad
+    W.data += -2 * W.grad
+
+# %%
+g = torch.Generator().manual_seed(2147483647)
+for i in range(50):
+    out = []
+    ix = 0
+    while True:
+        xenc = F.one_hot(torch.tensor([ix]), num_classes = 27).float()
+        logits = xenc @ W
+        counts = logits.exp()
+        p = counts/counts.sum(1, keepdims=True)
+
+        ix = torch.multinomial(p, num_samples = 1, replacement=True, generator=g).item()
+        out.append(itos[ix])
+        if ix==0:
+            break
+    print("".join(out))
 
 # %%
